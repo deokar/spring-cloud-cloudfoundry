@@ -1,4 +1,4 @@
-package org.springframework.cloud.cloudfoundry;
+package org.springframework.cloud.cloudfoundry.discovery;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,7 +48,7 @@ import java.util.*;
  * {@link CloudFoundryClient#CloudFoundryClient(CloudCredentials, URL, String, String)} variants to specify which space
  * and organization to use.
  *
- * @author <A href= "mailto:josh@joshlong.com">Josh Long</A>
+ * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
  */
 public class CloudFoundryDiscoveryClient implements DiscoveryClient {
 
@@ -93,22 +93,20 @@ public class CloudFoundryDiscoveryClient implements DiscoveryClient {
         List<ServiceInstance> serviceInstances =
                 this.createServiceInstancesFromCloudApplications(Collections.singletonList(application));
         return serviceInstances.size() > 0 ? serviceInstances.iterator().next() : null;
-
     }
 
     @Override
-    public List<ServiceInstance> getInstances(final String s) {
+    public List<ServiceInstance> getInstances(String s) {
         CloudApplication applications = this.cloudFoundryClient.getApplication(s);
         return this.createServiceInstancesFromCloudApplications(
                 Collections.singletonList(applications));
-
     }
 
     @Override
     public List<String> getServices() {
-        List<String> services = new ArrayList<>();
+        List<String> services = new ArrayList<String>();
         List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
-        Set<String> serviceIds = new HashSet<>();
+        Set<String> serviceIds = new HashSet<String>();
         for (CloudApplication ca : applications) {
             serviceIds.add(ca.getName());
         }
@@ -116,12 +114,10 @@ public class CloudFoundryDiscoveryClient implements DiscoveryClient {
         return services;
     }
 
-    private List<ServiceInstance> createServiceInstancesFromCloudApplications(
+    protected List<ServiceInstance> createServiceInstancesFromCloudApplications(
             Collection<CloudApplication> cloudApplications) {
         final Set<ServiceInstance> serviceInstances = new HashSet<>();
-
         for (CloudApplication ca : cloudApplications) {
-
             InstancesInfo ii = this.cloudFoundryClient.getApplicationInstances(ca);
             List<InstanceInfo> instances;
             if (ii != null && (instances = ii.getInstances()) != null) {
@@ -131,11 +127,10 @@ public class CloudFoundryDiscoveryClient implements DiscoveryClient {
                     }
                 }
             }
-
         }
-        List<ServiceInstance> si = new ArrayList<>();
-        si.addAll(serviceInstances);
-        return si;
+        List<ServiceInstance> instances = new ArrayList<>();
+        instances.addAll(serviceInstances);
+        return instances;
     }
 
     /**

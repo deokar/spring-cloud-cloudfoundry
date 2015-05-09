@@ -1,4 +1,4 @@
-package org.springframework.cloud.cloudfoundry;
+package org.springframework.cloud.cloudfoundry.discovery;
 
 
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -12,7 +12,7 @@ import java.lang.annotation.*;
  *
  * @author Dave Syer
  * @author Spencer Gibb
- * @author Josh Long
+ * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

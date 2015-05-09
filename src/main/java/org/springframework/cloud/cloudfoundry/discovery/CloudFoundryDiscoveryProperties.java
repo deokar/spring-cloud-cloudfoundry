@@ -1,19 +1,21 @@
-package org.springframework.cloud.cloudfoundry;
+package org.springframework.cloud.cloudfoundry.discovery;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import javax.validation.constraints.NotNull;
 
-@ConfigurationProperties(prefix = "cloudfoundry.client" )
-public class CloudFoundryClientProperties {
+/**
+ * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
+ */
+@ConfigurationProperties(prefix = "spring.cloud.cloudfoundry.discovery" )
+public class CloudFoundryDiscoveryProperties {
 
-    @NotNull
+
     private String cloudControllerUrl = "https://api.run.pivotal.io";
 
-    @NotNull
+
     private String  email ;
 
-    @NotNull
+
     private String password;
 
     public String getCloudControllerUrl() {

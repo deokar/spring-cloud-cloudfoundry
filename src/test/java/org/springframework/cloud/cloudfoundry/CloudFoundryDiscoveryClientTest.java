@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.cloudfoundry.discovery.CloudFoundryDiscoveryClient;
 import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * @author Josh Long
+ * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
  */
 public class CloudFoundryDiscoveryClientTest {
 

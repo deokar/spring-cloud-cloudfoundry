@@ -1,14 +1,10 @@
-package org.springframework.cloud.cloudfoundry;
+package org.springframework.cloud.cloudfoundry.discovery;
 
 import org.cloudfoundry.client.lib.CloudCredentials;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.client.discovery.noop.NoopDiscoveryClientAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -17,32 +13,27 @@ import java.net.MalformedURLException;
 import java.net.URI;
 
 /**
- * Configures Cloud Foundry based {@link org.springframework.cloud.client.discovery.DiscoveryClient}
- *
- * @author Josh Long
+ * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
  */
 @Configuration
 @EnableConfigurationProperties
-@ConditionalOnClass(CloudFoundryClient.class)
-@ConditionalOnProperty(value = "cloudfoundry.client.enabled", matchIfMissing = true)
-@AutoConfigureBefore(NoopDiscoveryClientAutoConfiguration.class)
-public class CloudFoundryClientAutoConfiguration {
+public class CloudFoundryDiscoveryClientConfiguration {
 
     @Autowired
-    private CloudFoundryClientProperties cloudFoundryClientProperties;
+    private CloudFoundryDiscoveryProperties cloudFoundryDiscoveryProperties;
 
     @Bean
     @ConditionalOnMissingBean(CloudCredentials.class)
     public CloudCredentials cloudCredentials() {
-        return new CloudCredentials(this.cloudFoundryClientProperties.getEmail(),
-                this.cloudFoundryClientProperties.getPassword());
+        return new CloudCredentials(this.cloudFoundryDiscoveryProperties.getEmail(),
+                this.cloudFoundryDiscoveryProperties.getPassword());
     }
 
     @Bean
     @ConditionalOnMissingBean(CloudFoundryClient.class)
     public CloudFoundryClient cloudFoundryClient(CloudCredentials cc) throws MalformedURLException {
         CloudFoundryClient cloudFoundryClient = new CloudFoundryClient(cc,
-                URI.create(this.cloudFoundryClientProperties.getCloudControllerUrl()).toURL());
+                URI.create(this.cloudFoundryDiscoveryProperties.getCloudControllerUrl()).toURL());
         cloudFoundryClient.login();
         return cloudFoundryClient;
     }
@@ -52,5 +43,10 @@ public class CloudFoundryClientAutoConfiguration {
     public CloudFoundryDiscoveryClient cloudFoundryDiscoveryClient(
             CloudFoundryClient cloudFoundryClient, Environment environment) {
         return new CloudFoundryDiscoveryClient(cloudFoundryClient, environment);
+    }
+
+    @Bean
+    public CloudFoundryDiscoveryProperties cloudFoundryDiscoveryProperties (){
+        return new CloudFoundryDiscoveryProperties();
     }
 }

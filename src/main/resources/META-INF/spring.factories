@@ -1,6 +1,4 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.springframework.cloud.lattice.discovery.RibbonLatticeAutoConfiguration
 
-# Discovery Client Configuration
-org.springframework.cloud.client.discovery.EnableDiscoveryClient=\
-org.springframework.cloud.lattice.discovery.LatticeDiscoveryClientConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.springframework.cloud.cloudfoundry.discovery.RibbonCloudFoundryAutoConfiguration
+
+org.springframework.cloud.client.discovery.EnableDiscoveryClient=org.springframework.cloud.cloudfoundry.discovery.CloudFoundryDiscoveryClientConfiguration

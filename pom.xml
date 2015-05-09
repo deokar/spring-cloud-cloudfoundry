@@ -5,17 +5,13 @@
 
     <artifactId>spring-cloud-cloudfoundry</artifactId>
     <packaging>jar</packaging>
+    <description>Spring Cloud CloudFoundry</description>
 
-    <name>spring-cloud-cloudfoundry</name>
-    <description>Spring Patform Cloudfoundry integration project</description>
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
         <version>1.0.2.BUILD-SNAPSHOT</version>
-        <relativePath/>
-        <!-- lookup parent from repository -->
     </parent>
-
 
     <scm>
         <url>https://github.com/spring-cloud/spring-cloud-cloudfoundry</url>
@@ -25,160 +21,36 @@
         <tag>HEAD</tag>
     </scm>
 
-    <dependencyManagement>
-        <dependencies>
-
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-netflix</artifactId>
-                <version>1.0.3.BUILD-SNAPSHOT</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
+
+        <dependency>
+            <optional>true</optional>
+            <groupId>com.netflix.ribbon</groupId>
+            <artifactId>ribbon-loadbalancer</artifactId>
+            <version>${ribbon.version}</version>
+
+        </dependency>
+        <dependency>
+            <optional>true</optional>
+            <groupId>com.netflix.ribbon</groupId>
+            <artifactId>ribbon-core</artifactId>
+            <version>${ribbon.version}</version>
+
+        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-netflix-core</artifactId>
-            <optional>true</optional>
+             <version>${spring.cloud.netflix.core}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-netflix-eureka-server</artifactId>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring-boot-starter-log4j</artifactId>
-                    <groupId>org.springframework.boot</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!--
-
-                <dependency>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-config-client</artifactId>
-                    <optional>true</optional>
-                </dependency>
-
-                <dependency>
-                    <groupId>com.netflix.ribbon</groupId>
-                    <artifactId>ribbon</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>com.netflix.ribbon</groupId>
-                    <artifactId>ribbon-core</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>com.netflix.ribbon</groupId>
-                    <artifactId>ribbon-loadbalancer</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>com.netflix.ribbon</groupId>
-                    <artifactId>ribbon-httpclient</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>com.netflix.archaius</groupId>
-                    <artifactId>archaius-core</artifactId>
-                </dependency>
-
-                &lt;!&ndash;DiscoveryClient &ndash;&gt;
-                <dependency>
-                    <groupId>org.cloudfoundry</groupId>
-                    <artifactId>cloudfoundry-client-lib</artifactId>
-                    <version>1.1.1</version>
-                </dependency>
-
-
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-configuration-processor</artifactId>
-                    <optional>true</optional>
-                </dependency>
-
-                &lt;!&ndash;<dependency>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-security</artifactId>
-                    <version>1.0.0.BUILD-SNAPSHOT</version>
-                    <optional>true</optional>
-                </dependency>&ndash;&gt;
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-actuator</artifactId>
-                    <optional>true</optional>
-                </dependency>
-                &lt;!&ndash;	<dependency>
-                        <groupId>org.cloudfoundry</groupId>
-                        <artifactId>spring-boot-cf-service-broker</artifactId>
-                        <version>2.3.2</version>
-                        <optional>true</optional>
-                    </dependency>&ndash;&gt;
-
-                <dependency>
-                    <groupId>org.projectlombok</groupId>
-                    <artifactId>lombok</artifactId>
-                    <scope>compile</scope>
-                    <optional>true</optional>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-test</artifactId>
-                    <scope>test</scope>
-                </dependency>-->
-        <!--copied from SC Lattie -->
-        <dependency>
-            <groupId>org.cloudfoundry</groupId>
-            <artifactId>cloudfoundry-client-lib</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.eureka</groupId>
-            <artifactId>eureka-core</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-commons</artifactId>
-        </dependency>
-        <!--  <dependency>
-              <groupId>org.springframework.cloud</groupId>
-              <artifactId>spring-cloud-config-client</artifactId>
-              <optional>true</optional>
-          </dependency>-->
+         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-netflix-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.ribbon</groupId>
-            <artifactId>ribbon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.ribbon</groupId>
-            <artifactId>ribbon-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.ribbon</groupId>
-            <artifactId>ribbon-loadbalancer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.ribbon</groupId>
-            <artifactId>ribbon-httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.netflix.archaius</groupId>
-            <artifactId>archaius-core</artifactId>
+            <optional>true</optional>
+            <groupId>org.cloudfoundry</groupId>
+            <artifactId>cloudfoundry-client-lib</artifactId>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -211,5 +83,11 @@
             </build>
         </profile>
     </profiles>
-
+    <properties>
+        <spring.cloud.commons>1.0.2.BUILD-SNAPSHOT</spring.cloud.commons>
+        <spring.cloud.bus>1.0.2.BUILD-SNAPSHOT</spring.cloud.bus>
+         <spring.cloud.netflix.core>1.0.3.BUILD-SNAPSHOT</spring.cloud.netflix.core>
+        <curator.version>2.7.0</curator.version>
+        <ribbon.version>2.0-RC9</ribbon.version>
+    </properties>
 </project>
