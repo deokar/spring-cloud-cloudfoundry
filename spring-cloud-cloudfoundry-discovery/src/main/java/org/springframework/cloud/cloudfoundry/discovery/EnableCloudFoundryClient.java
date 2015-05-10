@@ -9,7 +9,7 @@ import java.lang.annotation.*;
  * Use this (optionally) in case you want discovery and know for sure that it is Cloud Foundry you want.
  * All it does is turn on discovery and let the auto-configuration find the Cloud Foundry classes.
  *
- * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
+ * @author <a href="mailto:josh@joshlong.com">Josh Long</A>
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

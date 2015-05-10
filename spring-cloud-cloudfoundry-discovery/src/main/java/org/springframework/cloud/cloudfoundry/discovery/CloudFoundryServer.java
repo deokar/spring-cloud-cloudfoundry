@@ -4,7 +4,7 @@ import com.netflix.loadbalancer.Server;
 import org.cloudfoundry.client.lib.domain.CloudApplication;
 
 /**
- * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
+ * @author <a href="mailto:josh@joshlong.com">Josh Long</A>
  */
 public class CloudFoundryServer extends Server {
 
