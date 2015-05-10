@@ -17,7 +17,7 @@ public class CloudFoundryServerList extends AbstractServerList<CloudFoundryServe
 
     private final CloudFoundryClient cloudFoundryClient;
 
-    public CloudFoundryServerList(CloudFoundryClient cloudFoundryClient  ) {
+    public CloudFoundryServerList(CloudFoundryClient cloudFoundryClient) {
         this.cloudFoundryClient = cloudFoundryClient;
     }
 
@@ -38,6 +38,6 @@ public class CloudFoundryServerList extends AbstractServerList<CloudFoundryServe
 
     protected List<CloudFoundryServer> cloudFoundryServers() {
         CloudApplication cloudApplications = this.cloudFoundryClient.getApplication(this.serviceId);
-        return Collections.singletonList( new CloudFoundryServer(cloudApplications));
+        return Collections.singletonList(new CloudFoundryServer(cloudApplications));
     }
 }

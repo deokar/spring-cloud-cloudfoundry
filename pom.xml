@@ -4,90 +4,63 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spring-cloud-cloudfoundry</artifactId>
-    <packaging>jar</packaging>
-    <description>Spring Cloud CloudFoundry</description>
+    <version>1.0.2.BUILD-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
         <version>1.0.2.BUILD-SNAPSHOT</version>
-    </parent>
+        <relativePath/>
+     </parent>
 
     <scm>
-        <url>https://github.com/spring-cloud/spring-cloud-cloudfoundry</url>
-        <connection>scm:git:git://github.com/spring-cloud/spring-cloud-cloudfoundry.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/spring-cloud/spring-cloud-cloudfoundry.git
+        <url>https://github.com/spring-cloud/spring-cloud-consul</url>
+        <connection>
+            scm:git:git://github.com/spring-cloud/spring-cloud-consul.git
+        </connection>
+        <developerConnection>
+            scm:git:ssh://git@github.com/spring-cloud/spring-cloud-consul.git
         </developerConnection>
         <tag>HEAD</tag>
     </scm>
 
-    <dependencies>
+    <modules>
+        <module>spring-cloud-cloudfoundry-discovery</module>
+    </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-        <dependency>
-            <optional>true</optional>
-            <groupId>com.netflix.ribbon</groupId>
-            <artifactId>ribbon-loadbalancer</artifactId>
-            <version>${ribbon.version}</version>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-netflix</artifactId>
+                <version>1.0.3.BUILD-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
-        </dependency>
-        <dependency>
-            <optional>true</optional>
-            <groupId>com.netflix.ribbon</groupId>
-            <artifactId>ribbon-core</artifactId>
-            <version>${ribbon.version}</version>
 
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-netflix-core</artifactId>
-             <version>${spring.cloud.netflix.core}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-commons</artifactId>
-         </dependency>
-        <dependency>
-            <optional>true</optional>
-            <groupId>org.cloudfoundry</groupId>
-            <artifactId>cloudfoundry-client-lib</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+        </dependencies>
+    </dependencyManagement>
 
-    <profiles>
-        <profile>
-            <id>docs</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctor-maven-plugin</artifactId>
-                        <inherited>false</inherited>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <inherited>false</inherited>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <inherited>false</inherited>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+
     <properties>
-        <spring.cloud.commons>1.0.2.BUILD-SNAPSHOT</spring.cloud.commons>
-        <spring.cloud.bus>1.0.2.BUILD-SNAPSHOT</spring.cloud.bus>
-         <spring.cloud.netflix.core>1.0.3.BUILD-SNAPSHOT</spring.cloud.netflix.core>
-        <curator.version>2.7.0</curator.version>
-        <ribbon.version>2.0-RC9</ribbon.version>
+        <cloudfoundry.version>0.0.1-SNAPSHOT</cloudfoundry.version>
     </properties>
+
+
+
 </project>

@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
+ */
 @Configuration
 public class CloudFoundryRibbonClientConfiguration {
 
@@ -26,7 +29,7 @@ public class CloudFoundryRibbonClientConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ServerList<?> ribbonServerList(CloudFoundryClient cloudFoundryClient, IClientConfig config) {
-        CloudFoundryServerList cloudFoundryServerList = new CloudFoundryServerList(cloudFoundryClient );
+        CloudFoundryServerList cloudFoundryServerList = new CloudFoundryServerList(cloudFoundryClient);
         cloudFoundryServerList.initWithNiwsConfig(config);
         return cloudFoundryServerList;
     }

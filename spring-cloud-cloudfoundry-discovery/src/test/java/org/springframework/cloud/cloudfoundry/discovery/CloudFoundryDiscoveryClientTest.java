@@ -1,5 +1,5 @@
-package org.springframework.cloud.cloudfoundry;
-
+package org.springframework.cloud.cloudfoundry.discovery;
+/*
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
@@ -20,10 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
-
-/**
- * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
- */
 public class CloudFoundryDiscoveryClientTest {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -142,3 +138,4 @@ public class CloudFoundryDiscoveryClientTest {
 
 }
 
+*/

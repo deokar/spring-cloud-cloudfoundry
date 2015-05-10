@@ -46,7 +46,7 @@ public class CloudFoundryDiscoveryClientConfiguration {
     }
 
     @Bean
-    public CloudFoundryDiscoveryProperties cloudFoundryDiscoveryProperties (){
+    public CloudFoundryDiscoveryProperties cloudFoundryDiscoveryProperties() {
         return new CloudFoundryDiscoveryProperties();
     }
 }
