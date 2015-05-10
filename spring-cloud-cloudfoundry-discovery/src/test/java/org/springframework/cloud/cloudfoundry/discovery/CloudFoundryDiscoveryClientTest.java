@@ -1,5 +1,5 @@
 package org.springframework.cloud.cloudfoundry.discovery;
-/*
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.cloudfoundry.discovery.CloudFoundryDiscoveryClient;
 import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
@@ -20,6 +19,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
+
+/**
+ * @author <A href="mailto:josh@Joshlong.com">Josh Long</A>
+ */
 public class CloudFoundryDiscoveryClientTest {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -34,7 +37,7 @@ public class CloudFoundryDiscoveryClientTest {
 
     private CloudFoundryClient cloudFoundryClient;
 
-    private CloudApplication fakeCloudApplication( String name, String... uri) {
+    private CloudApplication fakeCloudApplication(String name, String... uri) {
         CloudApplication cloudApplication = Mockito.mock(CloudApplication.class);
         Mockito.when(cloudApplication.getName()).thenReturn(name);
         Mockito.when(cloudApplication.getUris()).thenReturn(Arrays.asList(uri));
@@ -137,5 +140,3 @@ public class CloudFoundryDiscoveryClientTest {
     }
 
 }
-
-*/

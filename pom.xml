@@ -27,6 +27,7 @@
 
     <modules>
         <module>spring-cloud-cloudfoundry-discovery</module>
+        <module>spring-cloud-cloudfoundry-web</module>
     </modules>
     <build>
         <plugins>
