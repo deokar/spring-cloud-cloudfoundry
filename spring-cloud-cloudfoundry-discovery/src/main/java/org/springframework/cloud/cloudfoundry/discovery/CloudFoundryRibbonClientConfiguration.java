@@ -23,8 +23,8 @@ public class CloudFoundryRibbonClientConfiguration {
     protected static final String DEFAULT_NAMESPACE = "ribbon";
     protected static final String VALUE_NOT_SET = "__not__set__";
 
-    @Value("${ribbon.client.name}")
-    private String serviceId = "client";
+    @Value("${ribbon.client.name:client}")
+    private String serviceId  ;
 
     @Bean
     @ConditionalOnMissingBean
@@ -57,5 +57,4 @@ public class CloudFoundryRibbonClientConfiguration {
     protected String getKey(String serviceId, String suffix) {
         return serviceId + "." + DEFAULT_NAMESPACE + "." + suffix;
     }
-
 }

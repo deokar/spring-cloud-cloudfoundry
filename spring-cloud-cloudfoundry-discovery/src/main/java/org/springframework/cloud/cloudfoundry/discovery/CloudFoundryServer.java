@@ -41,6 +41,4 @@ public class CloudFoundryServer extends Server {
     public MetaInfo getMetaInfo() {
         return metaInfo;
     }
-
-
 }
