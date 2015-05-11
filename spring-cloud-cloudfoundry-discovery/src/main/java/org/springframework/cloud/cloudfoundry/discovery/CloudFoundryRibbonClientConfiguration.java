@@ -7,6 +7,7 @@ import com.netflix.config.DynamicPropertyFactory;
 import com.netflix.config.DynamicStringProperty;
 import com.netflix.loadbalancer.ServerList;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,8 @@ public class CloudFoundryRibbonClientConfiguration {
     protected static final String DEFAULT_NAMESPACE = "ribbon";
     protected static final String VALUE_NOT_SET = "__not__set__";
 
-     private String serviceId  ;
+	@Value("${ribbon.client.name}")
+    private String serviceId;
 
     public CloudFoundryRibbonClientConfiguration (){ }
 
