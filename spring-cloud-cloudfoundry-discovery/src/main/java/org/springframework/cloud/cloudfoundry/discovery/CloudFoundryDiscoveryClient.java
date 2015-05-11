@@ -75,7 +75,8 @@ public class CloudFoundryDiscoveryClient implements DiscoveryClient {
             this.log.debug("Current ServiceInstance information...");
             this.log.debug("\tvcapApplicationName: " + this.vcapApplicationName);
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
