@@ -47,6 +47,7 @@ import java.util.*;
  * <p/>
  *
  * @author <A href="mailto:josh@joshlong.com">Josh Long</A>
+ * @author Spencer Gibb
  */
 public class CloudFoundryDiscoveryClient implements DiscoveryClient {
 
@@ -75,8 +76,7 @@ public class CloudFoundryDiscoveryClient implements DiscoveryClient {
             this.log.debug("Current ServiceInstance information...");
             this.log.debug("\tvcapApplicationName: " + this.vcapApplicationName);
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -101,13 +101,29 @@ public class CloudFoundryDiscoveryClient implements DiscoveryClient {
                 Collections.singletonList(applications));
     }
 
+    private boolean isRunning(CloudApplication ca) {
+        InstancesInfo ii = this.cloudFoundryClient.getApplicationInstances(ca);
+        List<InstanceInfo> instances;
+        if (ii != null && (instances = ii.getInstances()) != null) {
+            for (InstanceInfo resolved : instances) {
+                InstanceState state = resolved.getState();
+                if (state != null && state.equals(InstanceState.RUNNING)) {
+                     return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public List<String> getServices() {
-        List<String> services = new ArrayList<String>();
+        List<String> services = new ArrayList<>();
         List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
-        Set<String> serviceIds = new HashSet<String>();
+        Set<String> serviceIds = new HashSet<>();
         for (CloudApplication ca : applications) {
-            serviceIds.add(ca.getName());
+            if (isRunning(ca)) {
+                serviceIds.add(ca.getName());
+            }
         }
         services.addAll(serviceIds);
         return services;
@@ -117,14 +133,8 @@ public class CloudFoundryDiscoveryClient implements DiscoveryClient {
             Collection<CloudApplication> cloudApplications) {
         Set<ServiceInstance> serviceInstances = new HashSet<>();
         for (CloudApplication ca : cloudApplications) {
-            InstancesInfo ii = this.cloudFoundryClient.getApplicationInstances(ca);
-            List<InstanceInfo> instances;
-            if (ii != null && (instances = ii.getInstances()) != null) {
-                for (InstanceInfo resolved : instances) {
-                    if (resolved.getState() != null && resolved.getState().equals(InstanceState.RUNNING)) {
-                        serviceInstances.add(new CloudFoundryServiceInstance(ca, resolved));
-                    }
-                }
+            if (isRunning(ca)) {
+                serviceInstances.add(new CloudFoundryServiceInstance(ca));
             }
         }
         List<ServiceInstance> instances = new ArrayList<>();
@@ -134,26 +144,19 @@ public class CloudFoundryDiscoveryClient implements DiscoveryClient {
 
     public static class CloudFoundryServiceInstance extends DefaultServiceInstance {
 
-        private final InstanceInfo instancesInfo;
-
         private final CloudApplication cloudApplication;
-
-        public InstanceInfo getInstanceInfo() {
-            return instancesInfo;
-        }
 
         public CloudApplication getCloudApplication() {
             return cloudApplication;
         }
 
-        public CloudFoundryServiceInstance(CloudApplication ca, InstanceInfo ii) {
+        public CloudFoundryServiceInstance(CloudApplication ca) {
             super(ca.getName(),
                     ca.getUris().iterator().next(),
                     80,
                     false);
 
             this.cloudApplication = ca;
-            this.instancesInfo = ii;
         }
     }
 }
