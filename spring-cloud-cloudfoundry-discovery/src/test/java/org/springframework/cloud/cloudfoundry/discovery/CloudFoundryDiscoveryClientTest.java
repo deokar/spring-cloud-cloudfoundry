@@ -62,36 +62,17 @@ public class CloudFoundryDiscoveryClientTest {
                         "\"state_timestamp\":1431028810}");
 
         List<CloudApplication> cloudApplications = new ArrayList<>();
-        cloudApplications.add(fakeCloudApplication("hi-service", "hi-service.cfapps.io", "hi-service-1.cfapps.io"));
+         cloudApplications.add(fakeCloudApplication(this.hiServiceServiceId, "hi-service.cfapps.io", "hi-service-1.cfapps.io"));
         cloudApplications.add(fakeCloudApplication("config-service", "conf-service.cfapps.io", "conf-service-1.cfapps.io"));
 
         Mockito.when(this.cloudFoundryClient.getApplications())
                 .thenReturn(cloudApplications);
 
         cloudApplication = cloudApplications.get(0);
-        Mockito.when(this.cloudFoundryClient.getApplication("hi-service"))
+        Mockito.when(this.cloudFoundryClient.getApplication(this.hiServiceServiceId))
                 .thenReturn(cloudApplication);
 
-        this.cloudFoundryDiscoveryClient = new CloudFoundryDiscoveryClient(cloudFoundryClient, environment);
-    }
-
-    @Test
-    public void testServiceResolution() {
-        List<String> serviceNames = this.cloudFoundryDiscoveryClient.getServices();
-
-        assertTrue("here should be one registered service.",
-                serviceNames.size() == 2 && serviceNames.contains("hi-service"));
-
-        for (String serviceName : serviceNames) {
-            this.log.debug("\t discovered serviceName: " + serviceName);
-        }
-    }
-
-    @Test
-    public void testInstances() {
-        String serviceId = "hi-service";
-
-        Mockito.when(this.cloudFoundryClient.getApplication(serviceId))
+        Mockito.when(this.cloudFoundryClient.getApplication(this.hiServiceServiceId))
                 .thenReturn(this.cloudApplication);
 
         InstanceInfo instanceInfo = Mockito.mock(InstanceInfo.class);
@@ -104,9 +85,26 @@ public class CloudFoundryDiscoveryClientTest {
         Mockito.when(this.cloudFoundryClient.getApplicationInstances(this.cloudApplication))
                 .thenReturn(instancesInfo);
 
-        List<ServiceInstance> instances = this.cloudFoundryDiscoveryClient.getInstances(serviceId);
-        assertEquals(instances.size(), 1);
+        this.cloudFoundryDiscoveryClient = new CloudFoundryDiscoveryClient(cloudFoundryClient, environment);
+    }
 
+    @Test
+    public void testServiceResolution() {
+        List<String> serviceNames = this.cloudFoundryDiscoveryClient.getServices();
+
+        assertTrue("there should be one registered service.", serviceNames.contains(
+                this.hiServiceServiceId));
+
+        for (String serviceName : serviceNames) {
+            this.log.debug("\t discovered serviceName: " + serviceName);
+        }
+    }
+
+    @Test
+    public void testInstances() {
+        List<ServiceInstance> instances = this.cloudFoundryDiscoveryClient.getInstances(
+                this.hiServiceServiceId);
+        assertEquals(instances.size(), 1);
     }
 
     @Test
