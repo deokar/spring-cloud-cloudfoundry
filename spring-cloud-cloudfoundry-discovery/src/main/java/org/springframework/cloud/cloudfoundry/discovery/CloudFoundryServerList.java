@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class CloudFoundryServerList extends AbstractServerList<CloudFoundryServer> {
 
-    private String serviceId;
+    protected String serviceId;
 
     private final CloudFoundryClient cloudFoundryClient;
 

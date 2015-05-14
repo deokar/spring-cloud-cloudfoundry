@@ -7,6 +7,7 @@ import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.cloudfoundry.client.lib.domain.InstanceInfo;
 import org.cloudfoundry.client.lib.domain.InstanceState;
 import org.cloudfoundry.client.lib.domain.InstancesInfo;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -31,8 +32,6 @@ public class CloudFoundryDiscoveryClientTest {
 
     private CloudApplication cloudApplication;
 
-    private Environment environment;
-
     private String hiServiceServiceId = "hi-service";
 
     private CloudFoundryClient cloudFoundryClient;
@@ -47,9 +46,9 @@ public class CloudFoundryDiscoveryClientTest {
     @Before
     public void setUp() {
         this.cloudFoundryClient = Mockito.mock(CloudFoundryClient.class);
-        this.environment = Mockito.mock(Environment.class);
+        Environment environment = Mockito.mock(Environment.class);
 
-        Mockito.when(this.environment.getProperty("VCAP_APPLICATION"))
+        Mockito.when(environment.getProperty("VCAP_APPLICATION"))
                 .thenReturn("{\"limits\":{\"mem\":1024,\"disk\":1024,\"fds\":16384},\"application_version\":" +
                         "\"36eff082-96d6-498f-8214-508fda72ba65\",\"application_name\":\"" + hiServiceServiceId +
                         "\",\"application_uris\"" +
@@ -92,7 +91,7 @@ public class CloudFoundryDiscoveryClientTest {
     public void testServiceResolution() {
         List<String> serviceNames = this.cloudFoundryDiscoveryClient.getServices();
 
-        assertTrue("there should be one registered service.", serviceNames.contains(
+        Assert.assertTrue("there should be one registered service.", serviceNames.contains(
                 this.hiServiceServiceId));
 
         for (String serviceName : serviceNames) {
