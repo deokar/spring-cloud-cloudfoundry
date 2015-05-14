@@ -26,6 +26,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,7 +48,9 @@ public class DemoApplication {
     private Log log = LogFactory.getLog(getClass());
 
     @Bean
-    CommandLineRunner runner(final DiscoveryClient discoveryClient) {
+    CommandLineRunner runner(
+            final LoadBalancerClient loadBalancerClient ,
+            final DiscoveryClient discoveryClient) {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
@@ -67,6 +70,11 @@ public class DemoApplication {
                 log.info ("local: ") ;
                 log.info ("\t"+ ReflectionToStringBuilder.reflectionToString(
                         discoveryClient.getLocalServiceInstance(), ToStringStyle.MULTI_LINE_STYLE));
+
+                log.debug("=====================================");
+                ServiceInstance choose = loadBalancerClient.choose("hi-service");
+                log.info("chose: " + '('+ choose.getServiceId() +  ") "  +
+                        choose.getHost() + ':' + choose.getPort());
             }
         };
     }
