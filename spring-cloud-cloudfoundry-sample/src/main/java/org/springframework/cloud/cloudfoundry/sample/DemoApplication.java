@@ -27,10 +27,16 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.netflix.feign.EnableFeignClients;
+import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
@@ -38,7 +44,7 @@ import java.util.List;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@RestController
+@EnableFeignClients
 public class DemoApplication {
 
     public static void main(String[] args) {
@@ -49,34 +55,51 @@ public class DemoApplication {
 
     @Bean
     CommandLineRunner runner(
-            final LoadBalancerClient loadBalancerClient ,
-            final DiscoveryClient discoveryClient) {
+            final LoadBalancerClient loadBalancerClient,
+            final DiscoveryClient discoveryClient,
+            final HiServiceClient hiServiceClient,
+            final RestTemplate restTemplate
+    ) {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
 
+                log.info("=====================================");
+                log.info("Hi: " + restTemplate.getForEntity("http://hi-service/hi/{name}", String.class, "Josh"));
 
-                log.debug("=====================================");
+                log.info("=====================================");
                 for (String svc : discoveryClient.getServices()) {
                     log.info("service = " + svc);
                     List<ServiceInstance> instances = discoveryClient.getInstances(svc);
                     if (instances.size() > 0) {
-                        log.info ("\t"+ ReflectionToStringBuilder.reflectionToString(
+                        log.info("\t" + ReflectionToStringBuilder.reflectionToString(
                                 instances.iterator().next(), ToStringStyle.MULTI_LINE_STYLE));
                     }
                 }
 
-                log.debug("=====================================");
-                log.info ("local: ") ;
-                log.info ("\t"+ ReflectionToStringBuilder.reflectionToString(
+                log.info("=====================================");
+                log.info("Hi:" + hiServiceClient.hi("Josh"));
+
+
+                log.info("=====================================");
+                log.info("local: ");
+                log.info("\t" + ReflectionToStringBuilder.reflectionToString(
                         discoveryClient.getLocalServiceInstance(), ToStringStyle.MULTI_LINE_STYLE));
 
-                log.debug("=====================================");
+                log.info("=====================================");
                 ServiceInstance choose = loadBalancerClient.choose("hi-service");
-                log.info("chose: " + '('+ choose.getServiceId() +  ") "  +
+                log.info("chose: " + '(' + choose.getServiceId() + ") " +
                         choose.getHost() + ':' + choose.getPort());
             }
         };
     }
+}
+
+@FeignClient("hi-service")
+interface HiServiceClient {
+
+    @RequestMapping(name = "/hi/{name}", method = RequestMethod.GET)
+    Map<String, Object> hi(@PathVariable("name") String name);
+
 }
 
