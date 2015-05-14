@@ -30,6 +30,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,7 +41,9 @@ import java.util.Map;
 
 /**
  * This example assumes you've registered an application on <A href="http://cloudfoundry.org">Cloud Foundry</A>
- * named {@code hi-service} that responds with a String at {@code /hi/{name}}.
+ * named {@code hi-service} that responds with a String at {@code /hi/{name}}. There is a sample file in the project
+ * root called {@code hi-service.groovy} which you can deploy using the {@code spring} CLI and the {@code cf} CLI that
+ * works appropriately for this demonstration.
  *
  * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
  * @author Spencer Gibb
@@ -57,41 +60,42 @@ public class DemoApplication {
     private Log log = LogFactory.getLog(getClass());
 
     @Bean
-    CommandLineRunner runner(final LoadBalancerClient loadBalancerClient,
-                             final DiscoveryClient discoveryClient,
-                             final HiServiceClient hiServiceClient,
-                             final RestTemplate restTemplate) {
+    CommandLineRunner consume(final LoadBalancerClient loadBalancerClient,
+                              final DiscoveryClient discoveryClient,
+                              final HiServiceClient hiServiceClient,
+                              final RestTemplate restTemplate) {
 
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
 
+                // this demonstrates using the CF/Ribbon-aware RestTemplate interceptor
                 log.info("=====================================");
                 log.info("Hi: " + restTemplate.getForEntity("http://hi-service/hi/{name}", String.class, "Josh"));
 
+                // this demonstrates using the Spring Cloud Commons DiscoveryClient abstraction
                 log.info("=====================================");
                 for (String svc : discoveryClient.getServices()) {
                     log.info("service = " + svc);
                     List<ServiceInstance> instances = discoveryClient.getInstances(svc);
-                    if (instances.size() > 0) {
-                        log.info("\t" + ReflectionToStringBuilder.reflectionToString(
-                                instances.iterator().next(), ToStringStyle.MULTI_LINE_STYLE));
+                    for (ServiceInstance si : instances) {
+                        log.info("\t" + ReflectionToStringBuilder.reflectionToString(si, ToStringStyle.MULTI_LINE_STYLE));
                     }
                 }
-
-                log.info("=====================================");
-                log.info("Hi:" + hiServiceClient.hi("Josh"));
-
 
                 log.info("=====================================");
                 log.info("local: ");
                 log.info("\t" + ReflectionToStringBuilder.reflectionToString(
                         discoveryClient.getLocalServiceInstance(), ToStringStyle.MULTI_LINE_STYLE));
 
+                // this demonstrates using a CF/Ribbon-aware Feign client
+                log.info("=====================================");
+                log.info("Hi:" + hiServiceClient.hi("Josh"));
+
+                // this demonstrates using the Spring Cloud Commons LoadBalancerClient
                 log.info("=====================================");
                 ServiceInstance choose = loadBalancerClient.choose("hi-service");
-                log.info("chose: " + '(' + choose.getServiceId() + ") " +
-                        choose.getHost() + ':' + choose.getPort());
+                log.info("chose: " + '(' + choose.getServiceId() + ") " + choose.getHost() + ':' + choose.getPort());
             }
         };
     }
