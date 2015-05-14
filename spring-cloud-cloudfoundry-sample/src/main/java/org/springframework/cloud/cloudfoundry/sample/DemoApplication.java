@@ -39,6 +39,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This example assumes you've registered an application on <A href="http://cloudfoundry.org">Cloud Foundry</A>
+ * named {@code hi-service} that responds with a String at {@code /hi/{name}}.
+ *
  * @author <a href="mailto:josh@joshlong.com">Josh Long</a>
  * @author Spencer Gibb
  */
@@ -54,12 +57,11 @@ public class DemoApplication {
     private Log log = LogFactory.getLog(getClass());
 
     @Bean
-    CommandLineRunner runner(
-            final LoadBalancerClient loadBalancerClient,
-            final DiscoveryClient discoveryClient,
-            final HiServiceClient hiServiceClient,
-            final RestTemplate restTemplate
-    ) {
+    CommandLineRunner runner(final LoadBalancerClient loadBalancerClient,
+                             final DiscoveryClient discoveryClient,
+                             final HiServiceClient hiServiceClient,
+                             final RestTemplate restTemplate) {
+
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
@@ -95,10 +97,11 @@ public class DemoApplication {
     }
 }
 
+
 @FeignClient("hi-service")
 interface HiServiceClient {
 
-    @RequestMapping(name = "/hi/{name}", method = RequestMethod.GET)
+    @RequestMapping(value = "/hi/{name}", method = RequestMethod.GET)
     Map<String, Object> hi(@PathVariable("name") String name);
 
 }
