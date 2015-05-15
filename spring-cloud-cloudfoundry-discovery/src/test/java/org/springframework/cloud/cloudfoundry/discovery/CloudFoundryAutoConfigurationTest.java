@@ -1,16 +1,19 @@
 package org.springframework.cloud.cloudfoundry.discovery;
 
 import org.apache.commons.logging.LogFactory;
+import org.cloudfoundry.client.lib.CloudCredentials;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Collections;
@@ -58,10 +61,21 @@ public class CloudFoundryAutoConfigurationTest {
     @EnableFeignClients
     @EnableAutoConfiguration
     public static class SimpleConfiguration {
+
+        @Bean
+        CloudCredentials cloudCredentials() {
+            return Mockito.mock(CloudCredentials.class);
+        }
+
+        @Bean
+        CloudFoundryClient cloudFoundryClient() {
+            return Mockito.mock(CloudFoundryClient.class);
+        }
+
     }
 
     @Test
-    public void contextLoad() {
+    public void contextLoaded() {
         LogFactory.getLog(getClass()).debug("contextLoad()");
         Assert.assertTrue(this.context.getBeansOfType(CloudFoundryDiscoveryClient.class).size() > 0);
         Assert.assertTrue(this.context.getBeansOfType(CloudFoundryDiscoveryProperties.class).size() > 0);
