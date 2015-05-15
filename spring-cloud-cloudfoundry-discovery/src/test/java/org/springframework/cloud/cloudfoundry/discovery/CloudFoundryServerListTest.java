@@ -6,12 +6,14 @@ import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 /**
  * @author <A href="mailto:josh@Joshlong.com">Josh Long</A>
@@ -24,19 +26,19 @@ public class CloudFoundryServerListTest {
     @Before
     public void setUp() {
 
-        CloudApplication cloudApplication = Mockito.mock(CloudApplication.class);
-        Mockito.when(cloudApplication.getUris()).then(new Answer<List<String>>() {
+        CloudApplication cloudApplication = mock(CloudApplication.class);
+        given(cloudApplication.getUris()).will(new Answer<List<String>>() {
             @Override
             public List<String> answer(InvocationOnMock invocationOnMock) throws Throwable {
-                return Arrays.asList("a-url.com", "b-url.com") ;
+                return Arrays.asList("a-url.com", "b-url.com");
             }
-        }) ;
+        });
 
-        CloudFoundryClient cloudFoundryClient = Mockito.mock(CloudFoundryClient.class);
-        Mockito.when(cloudFoundryClient.getApplication(this.serviceId)).thenReturn(cloudApplication);
+        CloudFoundryClient cloudFoundryClient = mock(CloudFoundryClient.class);
+        given(cloudFoundryClient.getApplication(this.serviceId)).willReturn(cloudApplication);
 
-        IClientConfig iClientConfig = Mockito.mock(IClientConfig.class);
-        Mockito.when(iClientConfig.getClientName()).thenReturn(this.serviceId);
+        IClientConfig iClientConfig = mock(IClientConfig.class);
+        given(iClientConfig.getClientName()).willReturn(this.serviceId);
 
         this.cloudFoundryServerList = new CloudFoundryServerList(cloudFoundryClient);
         this.cloudFoundryServerList.initWithNiwsConfig(iClientConfig);

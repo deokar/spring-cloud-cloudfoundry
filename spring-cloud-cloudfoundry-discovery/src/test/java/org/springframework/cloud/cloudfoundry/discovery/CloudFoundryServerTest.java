@@ -6,6 +6,7 @@ import org.cloudfoundry.client.lib.domain.CloudApplication;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.BDDMockito.* ;
 import org.mockito.Mockito;
 
 import java.util.Arrays;
@@ -22,10 +23,10 @@ public class CloudFoundryServerTest {
 
     @Before
     public void setUp() {
-        CloudApplication cloudApplication = Mockito.mock(CloudApplication.class);
-        Mockito.when(cloudApplication.getUris()).thenReturn(this.urls);
-        Mockito.when(cloudApplication.getName()).thenReturn(this.serverName);
-        Mockito.when(cloudApplication.getRunningInstances()).thenReturn(1);
+        CloudApplication cloudApplication = mock(CloudApplication.class);
+        given(cloudApplication.getUris()).willReturn(this.urls);
+        given(cloudApplication.getName()).willReturn(this.serverName);
+        given (cloudApplication.getRunningInstances()).willReturn(1);
         this.cloudFoundryServer = new CloudFoundryServer(cloudApplication);
     }
 

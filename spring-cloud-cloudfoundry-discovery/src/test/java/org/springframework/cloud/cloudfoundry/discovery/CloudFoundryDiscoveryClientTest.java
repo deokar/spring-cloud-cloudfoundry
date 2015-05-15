@@ -10,7 +10,6 @@ import org.cloudfoundry.client.lib.domain.InstancesInfo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.core.env.Environment;
 
@@ -20,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.mock;
 
 /**
  * @author <A href="mailto:josh@Joshlong.com">Josh Long</A>
@@ -37,19 +38,19 @@ public class CloudFoundryDiscoveryClientTest {
     private CloudFoundryClient cloudFoundryClient;
 
     private CloudApplication fakeCloudApplication(String name, String... uri) {
-        CloudApplication cloudApplication = Mockito.mock(CloudApplication.class);
-        Mockito.when(cloudApplication.getName()).thenReturn(name);
-        Mockito.when(cloudApplication.getUris()).thenReturn(Arrays.asList(uri));
+        CloudApplication cloudApplication = mock(CloudApplication.class);
+        given(cloudApplication.getName()).willReturn(name);
+        given(cloudApplication.getUris()).willReturn(Arrays.asList(uri));
         return cloudApplication;
     }
 
     @Before
     public void setUp() {
-        this.cloudFoundryClient = Mockito.mock(CloudFoundryClient.class);
-        Environment environment = Mockito.mock(Environment.class);
+        this.cloudFoundryClient = mock(CloudFoundryClient.class);
+        Environment environment = mock(Environment.class);
 
-        Mockito.when(environment.getProperty("VCAP_APPLICATION"))
-                .thenReturn("{\"limits\":{\"mem\":1024,\"disk\":1024,\"fds\":16384},\"application_version\":" +
+        given(environment.getProperty("VCAP_APPLICATION"))
+                .willReturn("{\"limits\":{\"mem\":1024,\"disk\":1024,\"fds\":16384},\"application_version\":" +
                         "\"36eff082-96d6-498f-8214-508fda72ba65\",\"application_name\":\"" + hiServiceServiceId +
                         "\",\"application_uris\"" +
                         ":[\"" + hiServiceServiceId +
@@ -61,28 +62,28 @@ public class CloudFoundryDiscoveryClientTest {
                         "\"state_timestamp\":1431028810}");
 
         List<CloudApplication> cloudApplications = new ArrayList<>();
-         cloudApplications.add(fakeCloudApplication(this.hiServiceServiceId, "hi-service.cfapps.io", "hi-service-1.cfapps.io"));
+        cloudApplications.add(fakeCloudApplication(this.hiServiceServiceId, "hi-service.cfapps.io", "hi-service-1.cfapps.io"));
         cloudApplications.add(fakeCloudApplication("config-service", "conf-service.cfapps.io", "conf-service-1.cfapps.io"));
 
-        Mockito.when(this.cloudFoundryClient.getApplications())
-                .thenReturn(cloudApplications);
+        given(this.cloudFoundryClient.getApplications())
+                .willReturn(cloudApplications);
 
         cloudApplication = cloudApplications.get(0);
-        Mockito.when(this.cloudFoundryClient.getApplication(this.hiServiceServiceId))
-                .thenReturn(cloudApplication);
+        given(this.cloudFoundryClient.getApplication(this.hiServiceServiceId))
+                .willReturn(cloudApplication);
 
-        Mockito.when(this.cloudFoundryClient.getApplication(this.hiServiceServiceId))
-                .thenReturn(this.cloudApplication);
+        given(this.cloudFoundryClient.getApplication(this.hiServiceServiceId))
+                .willReturn(this.cloudApplication);
 
-        InstanceInfo instanceInfo = Mockito.mock(InstanceInfo.class);
-        InstancesInfo instancesInfo = Mockito.mock(InstancesInfo.class);
-        Mockito.when(instancesInfo.getInstances())
-                .thenReturn(Collections.singletonList(instanceInfo));
-        Mockito.when(instanceInfo.getState())
-                .thenReturn(InstanceState.RUNNING);
+        InstanceInfo instanceInfo = mock(InstanceInfo.class);
+        InstancesInfo instancesInfo = mock(InstancesInfo.class);
+        given(instancesInfo.getInstances())
+                .willReturn(Collections.singletonList(instanceInfo));
+        given(instanceInfo.getState())
+                .willReturn(InstanceState.RUNNING);
 
-        Mockito.when(this.cloudFoundryClient.getApplicationInstances(this.cloudApplication))
-                .thenReturn(instancesInfo);
+        given(this.cloudFoundryClient.getApplicationInstances(this.cloudApplication))
+                .willReturn(instancesInfo);
 
         this.cloudFoundryDiscoveryClient = new CloudFoundryDiscoveryClient(cloudFoundryClient, environment);
     }
@@ -109,12 +110,12 @@ public class CloudFoundryDiscoveryClientTest {
     @Test
     public void testLocalServiceInstanceRunning() {
 
-        InstanceInfo instanceInfo = Mockito.mock(InstanceInfo.class);
-        InstancesInfo instancesInfo = Mockito.mock(InstancesInfo.class);
-        Mockito.when(instancesInfo.getInstances()).thenReturn(Collections.singletonList(instanceInfo));
-        Mockito.when(instanceInfo.getState()).thenReturn(InstanceState.RUNNING);
+        InstanceInfo instanceInfo = mock(InstanceInfo.class);
+        InstancesInfo instancesInfo = mock(InstancesInfo.class);
+        given(instancesInfo.getInstances()).willReturn(Collections.singletonList(instanceInfo));
+        given(instanceInfo.getState()).willReturn(InstanceState.RUNNING);
 
-        Mockito.when(cloudFoundryClient.getApplicationInstances(this.cloudApplication)).thenReturn(instancesInfo);
+        given(cloudFoundryClient.getApplicationInstances(this.cloudApplication)).willReturn(instancesInfo);
 
         ServiceInstance localServiceInstance = this.cloudFoundryDiscoveryClient.getLocalServiceInstance();
         assertTrue(localServiceInstance.getHost().contains("hi-service.cfapps.io"));
@@ -125,12 +126,12 @@ public class CloudFoundryDiscoveryClientTest {
     @Test
     public void testLocalServiceInstanceNotRunning() {
 
-        InstanceInfo instanceInfo = Mockito.mock(InstanceInfo.class);
-        InstancesInfo instancesInfo = Mockito.mock(InstancesInfo.class);
-        Mockito.when(instancesInfo.getInstances()).thenReturn(Collections.singletonList(instanceInfo));
-        Mockito.when(instanceInfo.getState()).thenReturn(InstanceState.CRASHED);
+        InstanceInfo instanceInfo = mock(InstanceInfo.class);
+        InstancesInfo instancesInfo = mock(InstancesInfo.class);
+        given(instancesInfo.getInstances()).willReturn(Collections.singletonList(instanceInfo));
+        given(instanceInfo.getState()).willReturn(InstanceState.CRASHED);
 
-        Mockito.when(cloudFoundryClient.getApplicationInstances(this.cloudApplication)).thenReturn(instancesInfo);
+        given(cloudFoundryClient.getApplicationInstances(this.cloudApplication)).willReturn(instancesInfo);
 
         ServiceInstance localServiceInstance = this.cloudFoundryDiscoveryClient.getLocalServiceInstance();
         assertNull(localServiceInstance);

@@ -19,10 +19,10 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-netflix-core</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-logging</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.netflix.archaius</groupId>
             <artifactId>archaius-core</artifactId>
@@ -44,7 +44,8 @@
             <artifactId>ribbon-loadbalancer</artifactId>
         </dependency>
 
-     <!--
+
+        <!---->
         <dependency>
             <groupId>com.netflix.feign</groupId>
             <artifactId>feign-core</artifactId>
@@ -57,10 +58,10 @@
         </dependency>
         <dependency>
             <groupId>com.netflix.feign</groupId>
-            <artifactId>feign-slf4j</artifactId>
             <scope>test</scope>
+            <artifactId>feign-slf4j</artifactId>
         </dependency>
-         -->
+        <!---->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-commons</artifactId>
